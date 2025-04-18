@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiMQ.Broker", "SushiMQ.Broker\SushiMQ.Broker.csproj", "{69E8CEEE-CB7F-49D6-B513-266A2256D32E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiMQ.Engine", "SushiMQ.Engine\SushiMQ.Engine.csproj", "{F93E92E2-83D2-4816-9E68-2193C7D1CD1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiMQ.Storage", "SushiMQ.Storage\SushiMQ.Storage.csproj", "{BE46970E-2776-45F4-BC65-A1018A9F3F8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiMQ.Engine.Tests", "Tests\SushiMQ.Engine.Tests\SushiMQ.Engine.Tests.csproj", "{F045D1EA-3E3E-4128-B0AC-F10B74434E87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtils", "Tests\TestUtils\TestUtils.csproj", "{474FE1F3-3586-410B-A483-08C6FD092635}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69E8CEEE-CB7F-49D6-B513-266A2256D32E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69E8CEEE-CB7F-49D6-B513-266A2256D32E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69E8CEEE-CB7F-49D6-B513-266A2256D32E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69E8CEEE-CB7F-49D6-B513-266A2256D32E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93E92E2-83D2-4816-9E68-2193C7D1CD1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93E92E2-83D2-4816-9E68-2193C7D1CD1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93E92E2-83D2-4816-9E68-2193C7D1CD1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93E92E2-83D2-4816-9E68-2193C7D1CD1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE46970E-2776-45F4-BC65-A1018A9F3F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE46970E-2776-45F4-BC65-A1018A9F3F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE46970E-2776-45F4-BC65-A1018A9F3F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE46970E-2776-45F4-BC65-A1018A9F3F8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F045D1EA-3E3E-4128-B0AC-F10B74434E87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F045D1EA-3E3E-4128-B0AC-F10B74434E87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F045D1EA-3E3E-4128-B0AC-F10B74434E87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F045D1EA-3E3E-4128-B0AC-F10B74434E87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{474FE1F3-3586-410B-A483-08C6FD092635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{474FE1F3-3586-410B-A483-08C6FD092635}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{474FE1F3-3586-410B-A483-08C6FD092635}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{474FE1F3-3586-410B-A483-08C6FD092635}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
