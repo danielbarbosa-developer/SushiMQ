@@ -27,4 +27,10 @@
       <ProjectReference Include="..\TestUtils\TestUtils.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="sushi_mq.yml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

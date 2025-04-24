@@ -2,13 +2,13 @@ using System.Collections.Concurrent;
 
 namespace SushiMQ.Engine.DataCollections;
 
-public class SingleConsumeQueue : IDisposable
+public class ReadOnceQueue : IDisposable
 {
     public byte[] SushiLineName { get; }
     public uint SushiLineHash { get; }
     public ConcurrentQueue<byte[]> Messages { get; }
 
-    public SingleConsumeQueue(byte[] sushiLineBytes, uint sushiLineHash)
+    public ReadOnceQueue(byte[] sushiLineBytes, uint sushiLineHash)
     {
         SushiLineName = sushiLineBytes ?? throw new ArgumentNullException(nameof(sushiLineBytes));
         SushiLineHash = sushiLineHash;

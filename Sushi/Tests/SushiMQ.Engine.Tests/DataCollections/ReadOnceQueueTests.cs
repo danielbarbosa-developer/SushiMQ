@@ -7,13 +7,13 @@ using TestUtils.Seeds;
 
 namespace SushiMQ.Engine.Tests.DataCollections;
 
-public class SingleConsumeQueueTests
+public class ReadOnceQueueTests
 {
     private readonly string _json;
     private readonly byte[] _sushiLineNameBytes;
     private readonly uint _sushiLineHash;
     
-    public SingleConsumeQueueTests()
+    public ReadOnceQueueTests()
     {
         _sushiLineNameBytes = Encoding.UTF8.GetBytes("test.sushiLine.1");
         _sushiLineHash = Crc32Algorithm.Compute(_sushiLineNameBytes);
@@ -25,7 +25,7 @@ public class SingleConsumeQueueTests
     {
         // Arrange
         // Act
-        var singleConsumeQueue = new SingleConsumeQueue(_sushiLineNameBytes, _sushiLineHash);
+        var singleConsumeQueue = new ReadOnceQueue(_sushiLineNameBytes, _sushiLineHash);
 
         // Assert
         singleConsumeQueue.Messages.Count.Should().Be(0);
@@ -38,7 +38,7 @@ public class SingleConsumeQueueTests
     {
         // Arrange
         
-        var singleConsumeQueue = new SingleConsumeQueue(_sushiLineNameBytes, _sushiLineHash);
+        var singleConsumeQueue = new ReadOnceQueue(_sushiLineNameBytes, _sushiLineHash);
 
         var message = BsonConvertionHelper.ConvertJsonToBytes(_json);
 
@@ -54,7 +54,7 @@ public class SingleConsumeQueueTests
     {
         // Arrange
         
-        var singleConsumeQueue = new SingleConsumeQueue(_sushiLineNameBytes, _sushiLineHash);
+        var singleConsumeQueue = new ReadOnceQueue(_sushiLineNameBytes, _sushiLineHash);
 
         var expectedMessage = BsonConvertionHelper.ConvertJsonToBytes(_json);
         var message = Array.Empty<byte>();
