@@ -55,6 +55,8 @@ public class SushiConfigTests
         actualSushiLineMetadataDto.Storage.Should().Be(expectedSushiLineMetadataDto.Storage);
     }
     
+    // TODO: Error handling scenarios
+    
     private static SushiLineMetadataDto[] ExpectedSushiLineMetadataArray()
     {
         return

@@ -22,23 +22,24 @@ public class SushiConfig : ISushiConfig
         var sushiLineMetadataArray = new SushiLineMetadataDto[sushiConfig.SushiLines.Length];
 
         for (int i = 0; i < sushiConfig.SushiLines.Length; i++)
-        {
-            var sushiLineConfig = sushiConfig.SushiLines[i];
-
-            var sushiLineMetadata = new SushiLineMetadataDto()
-            {
-                SushiLineHash = Crc32Algorithm.Compute(Encoding.UTF8.GetBytes(sushiLineConfig.SushiLineName)),
-                Storage = sushiLineConfig.SushiLineStorage ? (byte)1 : (byte)0,
-                Consumption = (byte)sushiLineConfig.SushiLineConsumption,
-            };
-            sushiLineMetadataArray[i] = sushiLineMetadata;
-        }
+            sushiLineMetadataArray[i] = ConvertToSushiLineMetadataDto(sushiConfig.SushiLines[i]);
         
         sushiConfig.Dispose();
         
         return sushiLineMetadataArray;
     }
-    
+
+    private SushiLineMetadataDto ConvertToSushiLineMetadataDto(SushiLineConfig sushiLineConfig)
+    {
+        var sushiLineMetadata = new SushiLineMetadataDto()
+        {
+            SushiLineHash = Crc32Algorithm.Compute(Encoding.UTF8.GetBytes(sushiLineConfig.SushiLineName)),
+            Storage = sushiLineConfig.SushiLineStorage ? (byte)1 : (byte)0,
+            Consumption = (byte)sushiLineConfig.SushiLineConsumption,
+        };
+        return sushiLineMetadata;
+    }
+
     private SushiConfigDto LoadSushiConfig()
     {
         var yaml = File.ReadAllText(ConfigFilePath);

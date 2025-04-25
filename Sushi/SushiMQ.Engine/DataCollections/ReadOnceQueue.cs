@@ -4,13 +4,11 @@ namespace SushiMQ.Engine.DataCollections;
 
 public class ReadOnceQueue : IDisposable
 {
-    public byte[] SushiLineName { get; }
     public uint SushiLineHash { get; }
     public ConcurrentQueue<byte[]> Messages { get; }
 
-    public ReadOnceQueue(byte[] sushiLineBytes, uint sushiLineHash)
+    public ReadOnceQueue( uint sushiLineHash)
     {
-        SushiLineName = sushiLineBytes ?? throw new ArgumentNullException(nameof(sushiLineBytes));
         SushiLineHash = sushiLineHash;
         Messages = new ConcurrentQueue<byte[]>();
     }
