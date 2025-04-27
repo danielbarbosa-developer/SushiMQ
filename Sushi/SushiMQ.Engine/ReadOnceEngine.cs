@@ -49,7 +49,10 @@ public class ReadOnceEngine : ISushiEngine
 
     public void AddMessage(uint sushiLineHash, byte[] message)
     {
-        throw new NotImplementedException();
+        if (_readOnceQueues.TryGetValue(sushiLineHash, out var queue))
+        {
+            queue.Enqueue(message);
+        }
     }
 
     public void ReadMessage(uint sushiLineHash)
