@@ -13,4 +13,14 @@
       <PackageReference Include="MongoDB.Bson" Version="3.3.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SushiMQ.Engine\SushiMQ.Engine.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="sushi_mq.yml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

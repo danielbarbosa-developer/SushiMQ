@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiMQ.Engine.Tests", "Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtils", "Tests\TestUtils\TestUtils.csproj", "{474FE1F3-3586-410B-A483-08C6FD092635}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiMQ.Engine.Benchmark", "Benchmark\SushiMQ.Engine.Benchmark\SushiMQ.Engine.Benchmark.csproj", "{54492F7C-00FD-48C9-8464-8FF57002F5AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{474FE1F3-3586-410B-A483-08C6FD092635}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{474FE1F3-3586-410B-A483-08C6FD092635}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{474FE1F3-3586-410B-A483-08C6FD092635}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54492F7C-00FD-48C9-8464-8FF57002F5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54492F7C-00FD-48C9-8464-8FF57002F5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54492F7C-00FD-48C9-8464-8FF57002F5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54492F7C-00FD-48C9-8464-8FF57002F5AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
