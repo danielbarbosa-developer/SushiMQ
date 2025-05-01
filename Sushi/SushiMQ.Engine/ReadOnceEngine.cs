@@ -57,13 +57,19 @@ public class ReadOnceEngine : ISushiEngine
         {
             var sushiLineMetadata = sushiLineMetadataArray[i];
 
-            if (sushiLineMetadata.Consumption == (byte)SushiLineConsumption.ReadOnce)
-            {
-                var readOnceQueue = new ReadOnceQueue(sushiLineMetadata.SushiLineHash);
-                _readOnceQueues.TryAdd(sushiLineMetadata.SushiLineHash, readOnceQueue);
+            RegisterReadOnceQueue(sushiLineMetadata);
+            // TODO: Create the other supported Sushi Line Consumption types (ongoing)
+        }
+    }
+
+    private void RegisterReadOnceQueue(SushiLineMetadataDto sushiLineMetadata)
+    {
+        if (sushiLineMetadata.Consumption == (byte)SushiLineConsumption.ReadOnce)
+        {
+            var readOnceQueue = new ReadOnceQueue(sushiLineMetadata.SushiLineHash);
+            _readOnceQueues.TryAdd(sushiLineMetadata.SushiLineHash, readOnceQueue);
                 
-                // TODO: Define exception and unhappy path handlers (ongoing)
-            }
+            // TODO: Define exception and unhappy path handlers (ongoing)
         }
     }
 
@@ -82,7 +88,7 @@ public class ReadOnceEngine : ISushiEngine
         return queue.TryDequeue(out var message) ? message : [];
         
         // TODO: Define exception and unhappy path handlers (ongoing)
-        // TODO; Define return type when queue is empty or whe has error
+        // TODO; Define return type when queue is empty or when has error
     }
 
     public void Stop()
