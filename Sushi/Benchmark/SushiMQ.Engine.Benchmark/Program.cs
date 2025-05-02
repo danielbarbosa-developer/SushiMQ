@@ -20,6 +20,6 @@
 using BenchmarkDotNet.Running;
 using SushiMQ.Engine.Benchmark;
 
-Console.WriteLine("Hello, World!");
 
-var summary = BenchmarkRunner.Run<ReadOnceQueueAddingBenchmark>();
+var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
+
