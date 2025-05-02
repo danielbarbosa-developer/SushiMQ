@@ -1,4 +1,4 @@
-﻿// Sushi MQ
+// Sushi MQ
 // Copyright (C) 2025 Danzopen and Daniel Barbosa
 //
 // This file is part of Sushi MQ.
@@ -17,9 +17,21 @@
 //
 // This license ensures that you can use, study, share, and improve this software
 // freely, as long as you preserve this license and credit the original authors.
-using BenchmarkDotNet.Running;
-using SushiMQ.Engine.Benchmark;
 
+namespace SushiMQ.Engine.Dtos;
 
-var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
-
+public record SushiProtocolMessage
+{
+    public ushort Magic { get; set; }
+    public byte MessageType { get; set; }
+    public long Timestamp { get; set; }
+    public uint MessageCorrelationIdLength { get; set; }
+    public byte[]? MessageCorrelationId { get; set; }
+    public uint SushiLineHash { get; set; }
+    public uint SushiLineNamePayloadLength { get; set; }
+    public byte[]? SushiLineName { get; set; }
+    public uint PayloadLength { get; set; }
+    public byte[]? Payload { get; set; }
+    
+    
+}
