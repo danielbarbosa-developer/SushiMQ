@@ -18,6 +18,7 @@
 // This license ensures that you can use, study, share, and improve this software
 // freely, as long as you preserve this license and credit the original authors.
 
+using System.Buffers.Binary;
 using SushiMQ.Engine.Dtos;
 
 namespace SushiMQ.Engine.Parsers;
@@ -131,4 +132,72 @@ public static class SushiProtocolMessageParser
             Payload = payload
         };
     }
+    
+    /// <summary>
+    /// Converts a byte Span to a SushiProtocolMessage object.
+    /// Using Span and BitConverter to gain higher performance, it could be 3x faster and use 2x less memory than FromBytes method in the same class 
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <returns>SushiProtocolMessage</returns>
+    public static SushiProtocolMessage FromBytesSpanOptimized(ReadOnlySpan<byte> buffer)
+    {
+        var offset = 0;
+
+        ushort magic = BinaryPrimitives.ReadUInt16LittleEndian(buffer.Slice(offset, 2));
+        offset += 2;
+
+        byte messageType = buffer[offset];
+        offset += 1;
+
+        long timestamp = BinaryPrimitives.ReadInt64LittleEndian(buffer.Slice(offset, 8));
+        offset += 8;
+
+        uint correlationIdLength = BinaryPrimitives.ReadUInt32LittleEndian(buffer.Slice(offset, 4));
+        offset += 4;
+
+        byte[]? correlationId = null;
+        if (correlationIdLength > 0)
+        {
+            correlationId = buffer.Slice(offset, (int)correlationIdLength).ToArray();
+            offset += (int)correlationIdLength;
+        }
+
+        uint sushiLineHash = BinaryPrimitives.ReadUInt32LittleEndian(buffer.Slice(offset, 4));
+        offset += 4;
+
+        uint sushiLineNameLength = BinaryPrimitives.ReadUInt32LittleEndian(buffer.Slice(offset, 4));
+        offset += 4;
+
+        byte[]? sushiLineName = null;
+        if (sushiLineNameLength > 0)
+        {
+            sushiLineName = buffer.Slice(offset, (int)sushiLineNameLength).ToArray();
+            offset += (int)sushiLineNameLength;
+        }
+
+        uint payloadLength = BinaryPrimitives.ReadUInt32LittleEndian(buffer.Slice(offset, 4));
+        offset += 4;
+
+        byte[]? payload = null;
+        if (payloadLength > 0)
+        {
+            payload = buffer.Slice(offset, (int)payloadLength).ToArray();
+            offset += (int)payloadLength;
+        }
+
+        return new SushiProtocolMessage
+        {
+            Magic = magic,
+            MessageType = messageType,
+            Timestamp = timestamp,
+            MessageCorrelationIdLength = correlationIdLength,
+            MessageCorrelationId = correlationId,
+            SushiLineHash = sushiLineHash,
+            SushiLineNamePayloadLength = sushiLineNameLength,
+            SushiLineName = sushiLineName,
+            PayloadLength = payloadLength,
+            Payload = payload
+        };
+    }
+
 }

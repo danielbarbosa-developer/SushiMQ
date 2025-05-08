@@ -5,7 +5,7 @@
 //
 // Sushi MQ is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, **version 3** of the License.
+// the Free Software Foundation, version 3 of the License.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,19 +14,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see: <https://www.gnu.org/licenses/gpl-3.0.html>
-//
-// This license ensures that you can use, study, share, and improve this software
-// freely, as long as you preserve this license and credit the original authors.
+
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using MongoDB.Bson;
-using MongoDB.Bson.IO;
-using MongoDB.Bson.Serialization;
 using SushiMQ.Broker.Interfaces;
+using SushiMQ.Engine.Dtos;
+using SushiMQ.Engine.Dtos.Enums;
+using SushiMQ.Engine.Parsers;
 
 namespace SushiMQ.Broker
 {
@@ -34,6 +31,8 @@ namespace SushiMQ.Broker
     {
         private readonly int _port;
         private TcpListener _listener;
+        
+        // TODO: Inject ILogger for better logging patterns
 
         public SushiTcpListener()
         {
@@ -68,41 +67,76 @@ namespace SushiMQ.Broker
             {
                 while (true)
                 {
-                    var routeSizeBuffer = new byte[2];
-                    int read = await networkStream.ReadAsync(routeSizeBuffer, 0, 2);
-                    if (read == 0) break;
-                    ushort routeSize = BitConverter.ToUInt16(routeSizeBuffer);
+                    var totalLengthBuffer = new byte[4];
+                    await ReadFull(networkStream, totalLengthBuffer);
+                    int totalLength = BitConverter.ToInt32(totalLengthBuffer);
 
-                    var routeBuffer = new byte[routeSize];
-                    await ReadFull(networkStream, routeBuffer);
-                    string route = Encoding.UTF8.GetString(routeBuffer);
+                    if (totalLength <= 0)
+                        throw new InvalidDataException("Invalid total message length.");
 
-                    var bsonSizeBuffer = new byte[4];
-                    await ReadFull(networkStream, bsonSizeBuffer);
-                    int bsonSize = BitConverter.ToInt32(bsonSizeBuffer);
+                    var messageBuffer = new byte[totalLength];
+                    await ReadFull(networkStream, messageBuffer);
 
-                    var bsonBuffer = new byte[bsonSize];
-                    await ReadFull(networkStream, bsonBuffer);
+                    byte resourceType = messageBuffer[0];
                     
-                    Console.WriteLine($"📥 Route: {route}");
+                    
 
-                    if (route == "health")
+                    Console.WriteLine($"📥 Received MessageType: {resourceType}");
+
+                    switch ((SushiResourceType)resourceType)
                     {
-                        var pong = Encoding.UTF8.GetBytes("pong\n");
-                        await networkStream.WriteAsync(pong);
-                    }
-                    else if (route == "echo")
-                    {
-                        var test = "{test: 1}";
-                        var response = test.ToBson();
-                        await networkStream.WriteAsync(response);
-                    }
-                    else
-                    {
-                        var unknown = Encoding.UTF8.GetBytes("unknown route\n");
-                        await networkStream.WriteAsync(unknown);
+                        case SushiResourceType.Health:
+                            var pong = Encoding.UTF8.GetBytes("pong\n");
+                            await networkStream.WriteAsync(pong);
+                            break;
+
+                        case SushiResourceType.Publish:
+                            
+                            // TODO: With more modes and handlers it will be necessary to use a dispatch table to avoid switches and if-else
+                            
+                            byte ackModeByte = messageBuffer[1];
+
+                            if ((AckMode)ackModeByte == AckMode.Leader)
+                            {
+                                var sushiProtocolMessage = SushiProtocolMessageParser.FromBytesSpan(messageBuffer.AsSpan()[2..]);
+                                
+                                // Step 2 Validate Message
+                            
+                                // Step 3 Call PublishHandler
+                            
+                                // Step 4 Respond following protocol
+                                
+                                var sushiProtocolAck = new SushiProtocolMessageAck()
+                                {
+                                    Timestamp = sushiProtocolMessage.Timestamp,
+                                    SushiLineHash = sushiProtocolMessage.SushiLineHash,
+                                };
+                                
+                                var ackBuffer = SushiProtocolMessageAckParser.ToBuffer(sushiProtocolAck);
+                                
+                                await networkStream.WriteAsync(ackBuffer);
+                            }
+                           
+                            
+                            
+                            break;
+
+                        case SushiResourceType.Consume:
+                            // TODO: Handle Consume
+                            break;
+
+                        case SushiResourceType.Register:
+                            // TODO: Handle Register
+                            break;
+
+                        default:
+                            var unknown = Encoding.UTF8.GetBytes("unknown message type\n");
+                            await networkStream.WriteAsync(unknown);
+                            break;
                     }
                 }
+                
+                
             }
             catch (Exception ex)
             {
@@ -113,6 +147,18 @@ namespace SushiMQ.Broker
                 client.Close();
             }
         }
+
+        // private async Task<SushiProtocolMessage> ReadAndParseMessageAsync(NetworkStream networkStream)
+        // {
+        //     var messageLengthBuffer = new byte[4];
+        //     await ReadFull(networkStream, messageLengthBuffer);
+        //     int messageLength = BitConverter.ToInt32(messageLengthBuffer);
+        //
+        //     var messageBuffer = new byte[messageLength];
+        //     await ReadFull(networkStream, messageBuffer);
+        //
+        //     return SushiProtocolMessageParser.FromBytesSpan(messageBuffer);
+        // }
 
         private static async Task ReadFull(NetworkStream stream, byte[] buffer)
         {
@@ -127,3 +173,5 @@ namespace SushiMQ.Broker
         }
     }
 }
+
+

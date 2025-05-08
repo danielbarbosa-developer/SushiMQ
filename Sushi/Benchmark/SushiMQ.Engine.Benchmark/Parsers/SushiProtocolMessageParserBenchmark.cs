@@ -7,6 +7,7 @@ namespace SushiMQ.Engine.Benchmark.Parsers;
 
 [MemoryDiagnoser]
 [SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+[SimpleJob(RuntimeMoniker.NativeAot80)]
 public class SushiProtocolMessageParserBenchmark
 {
     private byte[] buffer;
@@ -28,5 +29,6 @@ public class SushiProtocolMessageParserBenchmark
     {
         _ = SushiProtocolMessageParser.FromBytesSpan(buffer);
     }
+
 
 }
