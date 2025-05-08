@@ -1,6 +1,6 @@
 namespace SushiMQ.Engine.Dtos.Enums;
 
-public enum AcknowledgeMode : byte
+public enum AckMode : byte
 {
     None = 0x00,
     Leader = 0x01,

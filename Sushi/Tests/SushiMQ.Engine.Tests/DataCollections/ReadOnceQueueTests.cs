@@ -21,7 +21,6 @@ using System.Text;
 using FluentAssertions;
 using Force.Crc32;
 using SushiMQ.Engine.DataCollections;
-using TestUtils.BSON;
 using TestUtils.Seeds;
 
 namespace SushiMQ.Engine.Tests.DataCollections;
@@ -56,7 +55,8 @@ public class ReadOnceQueueTests
         
         var singleConsumeQueue = new ReadOnceQueue(_sushiLineHash);
 
-        var message = BsonConvertionHelper.ConvertJsonToBytes(_json);
+        var message =  Encoding.UTF8.GetBytes(_json);
+
 
         // Act
         singleConsumeQueue.Enqueue(message);
@@ -72,7 +72,7 @@ public class ReadOnceQueueTests
         
         var singleConsumeQueue = new ReadOnceQueue(_sushiLineHash);
 
-        var expectedMessage = BsonConvertionHelper.ConvertJsonToBytes(_json);
+        var expectedMessage = Encoding.UTF8.GetBytes(_json);
         var message = Array.Empty<byte>();
 
         // Act

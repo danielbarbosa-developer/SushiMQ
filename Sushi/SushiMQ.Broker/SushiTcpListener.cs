@@ -20,8 +20,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using MongoDB.Bson;
 using SushiMQ.Broker.Interfaces;
 using SushiMQ.Engine.Dtos;
 using SushiMQ.Engine.Dtos.Enums;
@@ -79,11 +77,13 @@ namespace SushiMQ.Broker
                     var messageBuffer = new byte[totalLength];
                     await ReadFull(networkStream, messageBuffer);
 
-                    byte messageType = messageBuffer[0];
+                    byte resourceType = messageBuffer[0];
+                    
+                    
 
-                    Console.WriteLine($"📥 Received MessageType: {messageType}");
+                    Console.WriteLine($"📥 Received MessageType: {resourceType}");
 
-                    switch ((SushiResourceType)messageType)
+                    switch ((SushiResourceType)resourceType)
                     {
                         case SushiResourceType.Health:
                             var pong = Encoding.UTF8.GetBytes("pong\n");
@@ -92,12 +92,33 @@ namespace SushiMQ.Broker
 
                         case SushiResourceType.Publish:
                             
-                            byte ackModeByte = messageBuffer[1];
+                            // TODO: With more modes and handlers it will be necessary to use a dispatch table to avoid switches and if-else
                             
-                            var sushiProtocolMessage = await ReadAndParseMessageAsync(networkStream);
-                            // Step 2 Validate Message
-                            // Step 3 Call PublishHandler in Fire and Forget
-                            // Step 4 Respond following protocol
+                            byte ackModeByte = messageBuffer[1];
+
+                            if ((AckMode)ackModeByte == AckMode.Leader)
+                            {
+                                var sushiProtocolMessage = SushiProtocolMessageParser.FromBytesSpan(messageBuffer.AsSpan()[2..]);
+                                
+                                // Step 2 Validate Message
+                            
+                                // Step 3 Call PublishHandler
+                            
+                                // Step 4 Respond following protocol
+                                
+                                var sushiProtocolAck = new SushiProtocolMessageAck()
+                                {
+                                    Timestamp = sushiProtocolMessage.Timestamp,
+                                    SushiLineHash = sushiProtocolMessage.SushiLineHash,
+                                };
+                                
+                                var ackBuffer = SushiProtocolMessageAckParser.ToBuffer(sushiProtocolAck);
+                                
+                                await networkStream.WriteAsync(ackBuffer);
+                            }
+                           
+                            
+                            
                             break;
 
                         case SushiResourceType.Consume:
@@ -127,17 +148,17 @@ namespace SushiMQ.Broker
             }
         }
 
-        private async Task<SushiProtocolMessage> ReadAndParseMessageAsync(NetworkStream networkStream)
-        {
-            var messageLengthBuffer = new byte[4];
-            await ReadFull(networkStream, messageLengthBuffer);
-            int messageLength = BitConverter.ToInt32(messageLengthBuffer);
-
-            var messageBuffer = new byte[messageLength];
-            await ReadFull(networkStream, messageBuffer);
-
-            return SushiProtocolMessageParser.FromBytesSpan(messageBuffer);
-        }
+        // private async Task<SushiProtocolMessage> ReadAndParseMessageAsync(NetworkStream networkStream)
+        // {
+        //     var messageLengthBuffer = new byte[4];
+        //     await ReadFull(networkStream, messageLengthBuffer);
+        //     int messageLength = BitConverter.ToInt32(messageLengthBuffer);
+        //
+        //     var messageBuffer = new byte[messageLength];
+        //     await ReadFull(networkStream, messageBuffer);
+        //
+        //     return SushiProtocolMessageParser.FromBytesSpan(messageBuffer);
+        // }
 
         private static async Task ReadFull(NetworkStream stream, byte[] buffer)
         {

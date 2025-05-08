@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\SushiMQ.Broker\SushiMQ.Broker.csproj" />
+      <ProjectReference Include="..\TestUtils\TestUtils.csproj" />
     </ItemGroup>
 
     <ItemGroup>

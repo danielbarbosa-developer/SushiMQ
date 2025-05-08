@@ -18,9 +18,9 @@
 // This license ensures that you can use, study, share, and improve this software
 // freely, as long as you preserve this license and credit the original authors.
 
+using System.Text;
 using FluentAssertions;
 using SushiMQ.Engine.Infrastructure;
-using TestUtils.BSON;
 using TestUtils.Seeds;
 
 namespace SushiMQ.Engine.Tests;
@@ -76,7 +76,7 @@ public class ReadOnceEngineTests
         var readOnceEngine = new ReadOnceEngine(_config);
         readOnceEngine.Start();
         
-        var expectedMessage = BsonConvertionHelper.ConvertJsonToBytes(_json);
+        var expectedMessage = Encoding.UTF8.GetBytes(_json);
 
         // Act
         
@@ -95,7 +95,7 @@ public class ReadOnceEngineTests
         var readOnceEngine = new ReadOnceEngine(_config);
         readOnceEngine.Start();
     
-        var expectedMessage = BsonConvertionHelper.ConvertJsonToBytes(_json);
+        var expectedMessage = Encoding.UTF8.GetBytes(_json);
 
         const int parallelTasks = 100000000;
         const uint sushiLineHash = 2750574782;
@@ -121,7 +121,7 @@ public class ReadOnceEngineTests
         var readOnceEngine = new ReadOnceEngine(_config);
         readOnceEngine.Start();
     
-        var expectedMessage = BsonConvertionHelper.ConvertJsonToBytes(_json);
+        var expectedMessage = Encoding.UTF8.GetBytes(_json);
         const uint sushiLineHash = 2750574782;
         
         readOnceEngine.AddMessage(sushiLineHash, expectedMessage);
@@ -145,7 +145,7 @@ public class ReadOnceEngineTests
         var readOnceEngine = new ReadOnceEngine(_config);
         readOnceEngine.Start();
     
-        var expectedMessage = BsonConvertionHelper.ConvertJsonToBytes(_json);
+        var expectedMessage = Encoding.UTF8.GetBytes(_json);
 
         const int parallelTasks = 100000000;
         const uint sushiLineHash = 2750574782;
